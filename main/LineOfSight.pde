@@ -41,6 +41,16 @@ class LineOfSight extends Line {
   void setEnd(int x, int y) {
     this.end.x = x;
     this.end.y = y;
+    
+    int lgX = max(this.end.x, this.start.x) - min(this.end.x, this.start.x);
+    int lgY = max(this.end.y, this.start.y) - min(this.end.y, this.start.y);
+    
+    lgX = this.end.x < this.start.x ? -lgX : lgX;
+    lgY = this.end.y < this.start.y ? -lgY : lgY;
+    while(this.end.x >= 0 && this.end.x <= width && this.end.y >= 0 && this.end.y <= height) {
+      this.end.x += lgX;
+      this.end.y += lgY;
+    }
   }
 }
 

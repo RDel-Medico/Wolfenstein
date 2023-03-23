@@ -106,4 +106,10 @@ class Vision {
       this.lines[i].displayCollision(); 
     }
   }
+  
+  void display3d() {
+    for (int i = 0; i < this.lines.length; i++) {
+      this.lines[i].displayCollision(); 
+    }
+  }
 }
