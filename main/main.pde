@@ -1,6 +1,8 @@
 Map terrain = new Map((int)random(300,600), (int)random(300,600), 50, 50);
-LineOfSight line = new LineOfSight((int)random(0,400), (int)random(0,400), (int)random(0,400), (int)random(0,400)); 
-Vision view = new Vision(line, 1, 1);
+Point a = new Point((int)random(0,400), (int)random(0,400));
+Point b = new Point((int)random(0,400), (int)random(0,400));
+Line line = new Line(a, b); 
+Vision view = new Vision(line, 1, 100);
 
 boolean [] obstacles = new boolean[terrain.nbCell];
 
