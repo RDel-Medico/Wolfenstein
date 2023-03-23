@@ -44,6 +44,7 @@ class Vision {
   void updateCollision(Map map) {
     for (int i = 0; i < this.lines.length; i++) {
       Point [] allCollision = new Point[0];
+      int [] indexCollision = new int[0];
       for (int j = 0; j < map.map.length; j++) {
         if (map.map[j].obstacle) {
           Point collid = null;
@@ -57,11 +58,15 @@ class Vision {
           
           if (collid != null) {
               Point[] temp = new Point [allCollision.length + 1];
+              int[] temp2 = new int [indexCollision.length + 1];
               for (int k = 0; k < allCollision.length; k++) {
                 temp[k] = allCollision[k];
+                temp2[k] = indexCollision[k];
               }
               temp[allCollision.length] = collid;
+              temp2[indexCollision.length] = j;
               allCollision = temp;
+              indexCollision = temp2;
             }
             
             
@@ -74,11 +79,15 @@ class Vision {
           }
           if (collid != null) {
               Point[] temp = new Point [allCollision.length + 1];
+              int[] temp2 = new int [indexCollision.length + 1];
               for (int k = 0; k < allCollision.length; k++) {
                 temp[k] = allCollision[k];
+                temp2[k] = indexCollision[k];
               }
               temp[allCollision.length] = collid;
+              temp2[indexCollision.length] = j;
               allCollision = temp;
+              indexCollision = temp2;
             }
         }
       }
@@ -95,6 +104,7 @@ class Vision {
         if (distanceMin <= this.lines[i].distanceToObstacle) {
           this.lines[i].distanceToObstacle = distanceMin;
           this.lines[i].SetCollision(allCollision[indexPlusProche]);
+          this.lines[i].setCellColided(indexCollision[indexPlusProche]);
         }
       }
     } 
@@ -109,7 +119,7 @@ class Vision {
   
   void display3d() {
     for (int i = 0; i < this.lines.length; i++) {
-      this.lines[i].displayCollision(); 
+      this.lines[i].display3d(i*4); 
     }
   }
 }

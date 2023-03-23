@@ -21,6 +21,7 @@ class Point {
 
 class LineOfSight extends Line {
   int distanceToObstacle;
+  int cellCollided;
   Point collision;
   
   
@@ -34,8 +35,20 @@ class LineOfSight extends Line {
     this.collision = col; 
   }
   
+  void setCellColided(int cell) {
+    this.cellCollided = cell; 
+  }
+  
   void displayCollision() {
     this.collision.display();
+  }
+  
+  void display3d(int x) {
+    int topAndBot = (700 - (this.distanceToObstacle*50)) / 2;
+    stroke(#FF8B8B);
+    line(x, 0, x, height);
+    stroke(200, 200, this.cellCollided);
+    line(x, topAndBot, x, topAndBot + this.distanceToObstacle*50);
   }
   
   void setEnd(int x, int y) {
