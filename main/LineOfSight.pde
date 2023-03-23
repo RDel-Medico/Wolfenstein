@@ -2,18 +2,47 @@ class Point {
   int x;
   int y;
   
+  Point() {
+    x = 0;
+    y = 0;
+  }
+  
   Point(int x, int y) {
     this.x = x;
     this.y = y;
   }
   
   void display () {
-    stroke(0,0,255);
+    stroke(0,255,0);
     strokeWeight(10);
     point(this.x, this.y);
   }
 }
 
+class LineOfSight extends Line {
+  int distanceToObstacle;
+  Point collision;
+  
+  
+  LineOfSight (Point start, Point end) {
+    super(start, end); 
+    distanceToObstacle = 3000;
+    collision = new Point();
+  }
+  
+  void SetCollision(Point col) {
+    this.collision = col; 
+  }
+  
+  void displayCollision() {
+    this.collision.display();
+  }
+  
+  void setEnd(int x, int y) {
+    this.end.x = x;
+    this.end.y = y;
+  }
+}
 
 class Line {
   Point start;
@@ -24,21 +53,10 @@ class Line {
     this.end = b;
   }
   
-  void setEnd(int x, int y) {
-    this.end.x = x;
-    this.end.y = y;
-  }
-  
-  void display(boolean center) {
+  void display() {
     stroke(0,0,255);
     strokeWeight(2);
-    if (center) {
-      stroke(255,0,0);
-      strokeWeight(2);
-    }
     line(start.x, start.y, end.x, end.y);
-    //start.display();
-    //end.display();
   }
   
   /*
@@ -99,8 +117,18 @@ class Line {
     We now have the x and y equation :)
     */
     
-    int x = (B2 * C1 - B1 * C2) / (B2 * A1 - B1 * A2);
-    int y = (A1 * C2 - A2 * C1) / (A1 * B2 - A2 * B1);
+    int denominator = (B2 * A1 - B1 * A2);
+    
+    int x;
+    int y;
+    
+    if (denominator != 0) {
+      x = (B2 * C1 - B1 * C2) / denominator;
+      y = (A1 * C2 - A2 * C1) / denominator;
+    } else {
+      x = 0;
+      y = 0;
+    }
   
     intersection = new Point(x, y);
     return intersection;
