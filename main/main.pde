@@ -38,7 +38,7 @@ void setup() {
   b = new Point();
   
   line = new LineOfSight(a, b); 
-  view = new Vision(line, 1, 175);
+  view = new Vision(line, 1, 350);
 }
 
 void draw() {
@@ -66,12 +66,17 @@ void draw() {
   println("Time for view display : " + (end-start));
   
   start = millis();
-  view.displayCollision(terrain);
+  view.updateCollision(terrain);
   end = millis();
   println("Time for collision display : " + (end-start));
   
   start = millis();
-  view.display3d();
+  view.displayCollision();
+  end = millis();
+  println("Time for collision display : " + (end-start));
+  
+  start = millis();
+  //view.display3d(terrain);
   end = millis();
   println("Time for collision display : " + (end-start));
   

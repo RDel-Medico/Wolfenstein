@@ -4,6 +4,9 @@ class Cell {
   int largeur;
   int longeur;
   boolean obstacle;
+  int red;
+  int blue;
+  int green;
   
   Cell(boolean obstacle, int x, int y, int largeur, int longeur) {
     this.obstacle = obstacle;
@@ -11,6 +14,15 @@ class Cell {
     this.posY = y;
     this.largeur = largeur;
     this.longeur = longeur;
+    this.red = 0;
+    this.blue = 0;
+    this.green = 0;
+  }
+  
+  void setColor(int red, int green, int blue) {
+    this.red = red;
+    this.blue = blue;
+    this.green = green;
   }
   
   void display() {

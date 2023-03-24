@@ -77,6 +77,7 @@ class Vision {
             //Detection collision entre lines[i] && ligne haut de l'obstacle
             collid = this.lines[i].SegmentIntersect(new Line(new Point(map.map[j].posX, map.map[j].posY), new Point(map.map[j].posX + map.map[j].largeur, map.map[j].posY)));
           }
+          
           if (collid != null) {
               Point[] temp = new Point [allCollision.length + 1];
               int[] temp2 = new int [indexCollision.length + 1];
@@ -91,6 +92,29 @@ class Vision {
             }
         }
       }
+      Point collid = this.lines[i].SegmentIntersect(new Line(new Point(0, 0), new Point(width, 0))); // Collid devient point intersection avec mur du haut
+      if (collid == null) {
+        collid = this.lines[i].SegmentIntersect(new Line(new Point(0, height), new Point(width, height))); // Collid devient point intersection avec mur du bas
+        if (collid == null) {
+          collid = this.lines[i].SegmentIntersect(new Line(new Point(0, 0), new Point(0, height))); // Collid devient point intersection avec mur de gauche
+          if (collid == null) {
+            collid = this.lines[i].SegmentIntersect(new Line(new Point(width, 0), new Point(width, height))); // Collid devient point intersection avec mur de droite
+          }
+        }
+      }
+      
+      if (collid != null) {
+        Point[] temp = new Point [allCollision.length + 1];
+        int[] temp2 = new int [indexCollision.length + 1];
+        for (int k = 0; k < allCollision.length; k++) {
+          temp[k] = allCollision[k];
+          temp2[k] = indexCollision[k];
+        }
+        temp[allCollision.length] = collid;
+        temp2[indexCollision.length] = -1;
+        allCollision = temp;
+        indexCollision = temp2;
+      }
       
       int indexPlusProche = 0;
       int distanceMin = 3000;
@@ -104,22 +128,32 @@ class Vision {
         if (distanceMin <= this.lines[i].distanceToObstacle) {
           this.lines[i].distanceToObstacle = distanceMin;
           this.lines[i].SetCollision(allCollision[indexPlusProche]);
-          this.lines[i].setCellColided(indexCollision[indexPlusProche]);
+          if (indexCollision[indexPlusProche] == -1) {
+            this.lines[i].setBorderCollided();
+          } else {
+            this.lines[i].setCellColided(indexCollision[indexPlusProche]);
+          }
         }
       }
     } 
   }
   
-  void displayCollision(Map map) {
-    updateCollision(map);
+  void displayCollision() {
     for (int i = 0; i < this.lines.length; i++) {
       this.lines[i].displayCollision(); 
     }
   }
   
-  void display3d() {
-    for (int i = 0; i < this.lines.length; i++) {
-      this.lines[i].display3d(i*4); 
+  void display3d(Map map) {
+    int pixel = 0;
+    for (int i = this.lines.length / 2; i >= 0; i--) {
+      this.lines[i].display3d(pixel*2, map); 
+      pixel++;
+    }
+    
+    for (int i = this.lines.length / 2; i < this.lines.length; i++) {
+      this.lines[i].display3d(pixel*2, map); 
+      pixel++;
     }
   }
 }

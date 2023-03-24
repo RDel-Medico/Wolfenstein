@@ -1,10 +1,13 @@
 class Map {
   Cell[] map;
   int nbCell;
+  int largeur;
 
   Map(int largeurMap, int longeurMap, int largeurCase, int longeurCase) {
     int nbCellLargeur = (largeurMap - largeurMap%largeurCase) / largeurCase;
     int nbCellLongeur = (longeurMap - longeurMap%longeurCase) / longeurCase;
+    
+    this.largeur = nbCellLargeur;
     
     this.nbCell = nbCellLargeur*nbCellLongeur;
     
@@ -18,8 +21,17 @@ class Map {
   }
   
   void setObstacle(boolean [] obstacle) {
+    int red = 0;
+    int green = 0;
+    int blue = 0;
     for (int i = 0; i < this.nbCell; i++) {
+      if (i % this.largeur == 0) {
+        red += 15;
+        green += 15;
+        blue += 15;
+      }
       map[i].obstacle = obstacle[i];
+      map[i].setColor(red, green, blue);
     }
   }
   

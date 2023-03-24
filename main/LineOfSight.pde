@@ -23,6 +23,7 @@ class LineOfSight extends Line {
   int distanceToObstacle;
   int cellCollided;
   Point collision;
+  boolean borderCollided;
   
   
   LineOfSight (Point start, Point end) {
@@ -37,17 +38,29 @@ class LineOfSight extends Line {
   
   void setCellColided(int cell) {
     this.cellCollided = cell; 
+    this.borderCollided = false;
+  }
+  
+  void setBorderCollided() {
+    this.borderCollided = true;
   }
   
   void displayCollision() {
     this.collision.display();
   }
   
-  void display3d(int x) {
+  void display3d(int x, Map map) {
+    strokeWeight(2);
     int topAndBot = (700 - (this.distanceToObstacle*50)) / 2;
     stroke(#FF8B8B);
     line(x, 0, x, height);
-    stroke(200, 200, this.cellCollided);
+    
+    if (this.borderCollided) {
+      stroke(150);
+    } else {
+      stroke(map.map[this.cellCollided].red, map.map[this.cellCollided].green, map.map[this.cellCollided].blue);
+    }
+    
     line(x, topAndBot, x, topAndBot + this.distanceToObstacle*50);
   }
   
