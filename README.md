@@ -26,7 +26,7 @@ Then you can choose according to your OS and in capacity of your pc the version 
 Choose one of the two file that begin with linux (./Wolfenstein/linux-XXX)
 * For Windows :
 Choose one of the two file that begin with windows (./Wolfenstein/windows-XXX)
-```
+---
 * For low capacity computer :
 Choose the file that begin with your OS and end with LQ (./Wolfenstein/XXX-amd64_LQ)
 * For high capacity computer :
@@ -36,10 +36,9 @@ Choose the file that begin with your OS and end with HQ (./Wolfenstein/XXX-amd64
 
 * To run the program on Linux :
 In a terminal go under the version you choosed to run and execute the main (under ./Wolfenstein/windows-amd64_[HQ/LQ] execute ./main)
-```
+---
 * To run the program on Windows :
 Go under the version you choosed to run and execute the main.exe (./Wolfenstein/windows-amd64_[HQ/LQ]/main.exe)
-```
 
 ## Authors
 
