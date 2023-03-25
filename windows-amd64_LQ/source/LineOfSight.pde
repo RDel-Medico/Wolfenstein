@@ -245,10 +245,6 @@ class LineOfSight extends Line {
   void display3d(int x, Map map) {
     float topAndBot = this.distanceToObstacle / 2; // Size of ground / ceilling (they both have the same size)
 
-    stroke(#956400);
-    strokeWeight(width / nbLineOfView);
-    line(x, 0, x, height); // Line that represent ground and ceilling
-
     if (this.cellCollided == -1) { // If the collision is on a border we paint it grey otherwise we paint it the color of the obstacle
       stroke(150);
     } else {

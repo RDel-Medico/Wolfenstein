@@ -18,8 +18,8 @@ public class main extends PApplet {
 final int integerLimit = 2147483647;
 
 //Size of a cell on the map
-int longeurCase = 50;
-int largeurCase = 50;
+int longeurCase = 100;
+int largeurCase = 100;
 
 Map terrain; // The map
 
@@ -177,19 +177,33 @@ boolean displayTest = false;
   
   if (display3d) {
     start = millis();
+    displayBackground();
     view.display3d(terrain); // We display the 3d render
     end = millis();
     println("Time for 3d display : " + (end-start)); 
   }
   
-  fill(255);
+  fill(255, 255, 255);
   text("Press P for 2d rendering", 10, 20);
   text("Press O for 3d rendering", 10, 40);
   text("Press I to render all collision Point", 10, 60);
   text("Press Q to watch on your left", 10, 80);
   text("Press D to watch on your right", 10, 100);
-  text("Press Z to go forward", 10, 120);
+  text("Press Z to walk forward", 10, 120);
+  
   println("------------------------------------------------");
+}
+
+ public void displayBackground() {
+  noStroke();
+  for (int i = 0; i < 40; i++) {
+    fill(50+i*10, i, i);
+    rect(0, i*10, width, 10);
+  }
+  for (int i = 0; i < 40; i++) {
+    fill(50+i*10, i, i);
+    rect(0, height - i*10-10, width, 10);
+  }
 }
 class Cell {
    //coordinate of the top left corner
@@ -481,10 +495,6 @@ class LineOfSight extends Line {
    public void display3d(int x, Map map) {
     float topAndBot = this.distanceToObstacle / 2; // Size of ground / ceilling (they both have the same size)
 
-    stroke(0xFF956400);
-    strokeWeight(width / nbLineOfView);
-    line(x, 0, x, height); // Line that represent ground and ceilling
-
     if (this.cellCollided == -1) { // If the collision is on a border we paint it grey otherwise we paint it the color of the obstacle
       stroke(150);
     } else {
@@ -535,7 +545,6 @@ class LineOfSight extends Line {
     this.start.y = y;
   }
 }
-
 
 /*
 This class represent the vision of something it is composed of lines, each line representing a column of pixel on a 3d representation.
@@ -678,7 +687,6 @@ add a point at the end of a tab and return it
   temp[points.length] = point;
   return temp;
 }
-
 /*
 This class represent a rectangular map composed of rectangular cell, and each of this cell can be a normal cell or an obstacle
  */

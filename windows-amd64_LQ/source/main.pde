@@ -1,8 +1,8 @@
 final int integerLimit = 2147483647;
 
 //Size of a cell on the map
-int longeurCase = 50;
-int largeurCase = 50;
+int longeurCase = 100;
+int largeurCase = 100;
 
 Map terrain; // The map
 
@@ -24,7 +24,7 @@ Vision view;
 boolean [] obstacles;
 
 //The number of line in the view
-int nbLineOfView = 700; // This can be 700, 350, 140, 100, 70, 50, 28, 20, 14, 10, 4, 2
+int nbLineOfView = 350; // This can be 700, 350, 140, 100, 70, 50, 28, 20, 14, 10, 4, 2
 
 //Used for debug (calcul time of function)
 int start, end;
@@ -160,17 +160,31 @@ void draw() {
   
   if (display3d) {
     start = millis();
+    displayBackground();
     view.display3d(terrain); // We display the 3d render
     end = millis();
     println("Time for 3d display : " + (end-start)); 
   }
   
-  fill(255);
+  fill(255, 255, 255);
   text("Press P for 2d rendering", 10, 20);
   text("Press O for 3d rendering", 10, 40);
   text("Press I to render all collision Point", 10, 60);
   text("Press Q to watch on your left", 10, 80);
   text("Press D to watch on your right", 10, 100);
-  text("Press Z to go forward", 10, 120);
+  text("Press Z to walk forward", 10, 120);
+  
   println("------------------------------------------------");
+}
+
+void displayBackground() {
+  noStroke();
+  for (int i = 0; i < 40; i++) {
+    fill(50+i*10, i, i);
+    rect(0, i*10, width, 10);
+  }
+  for (int i = 0; i < 40; i++) {
+    fill(50+i*10, i, i);
+    rect(0, height - i*10-10, width, 10);
+  }
 }
