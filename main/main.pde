@@ -15,12 +15,16 @@ Vision view;
 
 boolean [] obstacles;
 
+int nbLineOfView = 350;
+
 int start, end;
 
 int previousMouseX = 0;
 
 boolean display3d = true;
 boolean display2d = false;
+boolean displayAllCollision = false;
+boolean displayTest = false;
 
 
 void setup() {
@@ -48,7 +52,7 @@ void setup() {
   
   line = new LineOfSight(a, b);
   line.pointOfView = new Point(terrain.map[startingCell].posX + longeurCase / 2, terrain.map[startingCell].posY);
-  view = new Vision(line, 1, 700);
+  view = new Vision(line, 1, nbLineOfView);
 }
 
 void keyPressed() {
@@ -60,16 +64,25 @@ void keyPressed() {
   if (keyCode == 'P') {
     display2d = !display2d;
   }
+  
+  if (keyCode == 'I') {
+    displayAllCollision = !displayAllCollision;
+  }
+  
+  if (keyCode == 'U') {
+    displayTest = !displayTest;
+  }
+  
   float directionX = 0;
   float directionY = 0;
   if (keyCode == 'Z') {
     directionX = line.pointOfView.x - currentX;
     directionY = line.pointOfView.y - currentY;
     
-    currentY += directionY / 10;
-    currentX += directionX / 10;
-    line.pointOfView.y += directionY / 10;
-    line.pointOfView.x += directionX / 10;
+    currentY += (int)(directionY / 10);
+    currentX += (int)(directionX / 10);
+    line.pointOfView.y += (int)(directionY / 10);
+    line.pointOfView.x += (int)(directionX / 10);
   }
   
   if (keyCode == 'Q') {
@@ -102,14 +115,6 @@ void keyPressed() {
 
 void draw() {
   background(200);
-  
-  /*
-    start = millis();
-    //terrain.display();
-    end = millis();
-    println("Time for map display : " + (end-start));
-  */
-  
   start = millis();
   line.updateVision();
   end = millis();
@@ -124,28 +129,15 @@ void draw() {
   view.update(line);
   end = millis();
   println("Time for update view : " + (end-start));
-  /*
-  start = millis();
-  //view.display();
-  end = millis();
-  println("Time for view display : " + (end-start));
-  */
   
   start = millis();
   view.updateCollision(terrain);
   end = millis();
   println("Time for collision update : " + (end-start));
   
-  /*
-  start = millis();
-  //view.displayCollision();
-  end = millis();
-  println("Time for collision display : " + (end-start));
-  */
-  
   if (display2d) {
     
-    line.pointOfView.display();
+    line.pointOfView.display(false);
     
     start = millis();
     terrain.display();
@@ -158,7 +150,7 @@ void draw() {
     println("Time for view display : " + (end-start));
     
     start = millis();
-    view.displayCollision();
+    view.displayCollision(displayAllCollision);
     end = millis();
     println("Time for collision display : " + (end-start));
   }
@@ -169,6 +161,8 @@ void draw() {
     end = millis();
     println("Time for 3d display : " + (end-start)); 
   }
+  
+  println("Line of vision : \n Start at : (" + line.start.x + ", " + line.start.y + ")\n And end at : (" + line.end.x + ", " + line.end.y + ")");
   
   for (int i = 0; i < 15; i++) {
     println();

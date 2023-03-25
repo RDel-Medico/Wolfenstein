@@ -15,12 +15,12 @@ class Vision {
     float ecartX;
     float ecartY;
     
-    if (abs(line.end.x-line.start.x) < abs(line.end.y-line.start.y)) { //Si c'est plutôt sur le côté
-      ecartX = this.ecart;
-      ecartY = 0;
-    } else {  //Si c'est plutôt sur le haut
-      ecartY = this.ecart;
+    if (line.end.x > width || line.end.x < 0) { // on regarde en haut à droite
       ecartX = 0;
+      ecartY = this.ecart;
+    } else {  // On regarde en haut à gauche
+      ecartY = 0;
+      ecartX = this.ecart;
     }
     
     for (int i = 0; i < (this.nbLine - (this.nbLine%2)) / 2; i++) { // On trace toutes les lignes de vision à gauche de la ligne centrale
@@ -42,11 +42,14 @@ class Vision {
   }
   
   void updateCollision(Map map) {
-    for (int i = 0; i < this.lines.length; i++) {
+    for (int i = 0; i < this.lines.length; i++) { // On regarde les collisions pour chaque lignes
+    
+      this.lines[i].collisions = new Point[0];
       Point [] allCollision = new Point[0];
       int [] indexCollision = new int[0];
-      for (int j = 0; j < map.map.length; j++) {
-        if (map.map[j].obstacle) {
+      
+      for (int j = 0; j < map.map.length; j++) { // Les collisions avec chaques case de la grille
+        if (map.map[j].obstacle) { //Si la case en question est un obstacle
           Point collid = null;
           if (this.lines[i].start.x < map.map[j].posX) { // Si on est a gauche de l'obstacle
             //Detection collision entre lines[i] && ligne gauche de l'obstacle
@@ -64,6 +67,7 @@ class Vision {
                 temp2[k] = indexCollision[k];
               }
               temp[allCollision.length] = collid;
+              this.lines[i].addCollision(collid);
               temp2[indexCollision.length] = j;
               allCollision = temp;
               indexCollision = temp2;
@@ -86,6 +90,7 @@ class Vision {
                 temp2[k] = indexCollision[k];
               }
               temp[allCollision.length] = collid;
+              this.lines[i].addCollision(collid);
               temp2[indexCollision.length] = j;
               allCollision = temp;
               indexCollision = temp2;
@@ -111,6 +116,7 @@ class Vision {
           temp2[k] = indexCollision[k];
         }
         temp[allCollision.length] = collid;
+        this.lines[i].addCollision(collid);
         temp2[indexCollision.length] = -1;
         allCollision = temp;
         indexCollision = temp2;
@@ -138,9 +144,9 @@ class Vision {
     } 
   }
   
-  void displayCollision() {
+  void displayCollision(boolean all) {
     for (int i = 0; i < this.lines.length; i++) {
-      this.lines[i].displayCollision(); 
+      this.lines[i].displayCollision(all); 
     }
   }
   
@@ -148,12 +154,12 @@ class Vision {
     int pixel = 0;
     
     for (int i = this.lines.length / 2; i >= 0; i--) {
-      this.lines[i].display3d(pixel, map);
+      this.lines[i].display3d(pixel*2, map);
       pixel++;
     }
     
     for (int i = this.lines.length / 2 + 1; i < this.lines.length; i++) {
-      this.lines[i].display3d(pixel, map);
+      this.lines[i].display3d(pixel*2, map);
       pixel++;
     }
   }

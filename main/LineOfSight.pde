@@ -16,8 +16,12 @@ class Point {
     this.x = x;
   }
   
-  void display () {
-    stroke(0,255,0);
+  void display (boolean t) {
+    if (t) {
+      stroke(0,255,0, 0);
+    } else {
+      stroke(0,255,0, 255); 
+    }
     strokeWeight(10);
     point(this.x, this.y);
   }
@@ -29,6 +33,7 @@ class LineOfSight extends Line {
   float distanceToObstacle;
   int cellCollided;
   Point collision;
+  Point[] collisions;
   boolean borderCollided;
   
   Point pointOfView;
@@ -38,6 +43,7 @@ class LineOfSight extends Line {
     super(start, end); 
     distanceToObstacle = 3000;
     collision = new Point();
+    collisions = new Point[0];
   }
   
   void SetCollision(Point col) {
@@ -53,8 +59,24 @@ class LineOfSight extends Line {
     this.borderCollided = true;
   }
   
-  void displayCollision() {
-    this.collision.display();
+  void addCollision(Point p) {
+    Point [] temp = new Point[this.collisions.length+1];
+    for (int i = 0; i < this.collisions.length; i++) {
+      temp[i] = collisions[i];
+    }
+    temp[this.collisions.length] = p;
+    this.collisions = temp;
+  }
+  
+  void displayCollision(boolean all) {
+    if (all) {
+      for (int i = 0; i < collisions.length; i++) {
+        this.collisions[i].display(false);
+      }
+    } else {
+      this.collision.display(false);
+    }
+    
   }
   
   void display3d(int x, Map map) {
@@ -62,7 +84,7 @@ class LineOfSight extends Line {
     strokeWeight(2);
     float hauteur = height - this.distanceToObstacle;
     float topAndBot = (height - hauteur ) / 2;
-    stroke(#FF8B8B);
+    stroke(#956400);
     line(x, 0, x, height);
     
     if (this.borderCollided) {
