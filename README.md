@@ -40,6 +40,11 @@ In a terminal go under the version you choosed to run and execute the main (unde
 * To run the program on Windows :
 Go under the version you choosed to run and execute the main.exe (./Wolfenstein-main/windows-amd64_[HQ/LQ]/main.exe)
 
+### Help
+
+* The generation of the map is totally random (maybe i will implement a proper maze generator in a later update), so it's common to be in weird situation when you appear such as being in a 1 by 1 room, don't hesitate to go in the 2D representation (the key to do that is shown on screen).
+And reload the programm if you are stuck.
+
 ## Authors
 
 Created by Rémi Del Medico
