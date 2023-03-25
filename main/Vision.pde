@@ -12,21 +12,10 @@ class Vision {
   }
   
   void update(LineOfSight line) {
-    float ecartX;
-    float ecartY;
-    
-    if (line.end.x > width || line.end.x < 0) { // on regarde en haut à droite
-      ecartX = 0;
-      ecartY = this.ecart;
-    } else {  // On regarde en haut à gauche
-      ecartY = 0;
-      ecartX = this.ecart;
-    }
-    
-    for (int i = 0; i < nbLine + 1; i++) { // On trace toutes les lignes de vision à gauche de la ligne centrale
-    lines[i] = new LineOfSight(new Point(line.start.x, line.start.y), new Point(((line.pointOfView.x-line.start.x) * cos(i*0.003) - (line.pointOfView.y - line.start.y) * sin(i*0.003) + line.start.x), ((line.pointOfView.y - line.start.y) * cos(i*0.003) + (line.pointOfView.x-line.start.x) * sin(i*0.003) + line.start.y)));
+    for (int i = -(nbLine/2); i < nbLine/2 + 1; i++) { // On trace toutes les lignes de vision à gauche de la ligne centrale
+    lines[i+nbLine/2] = new LineOfSight(new Point(line.start.x, line.start.y), new Point(((line.pointOfView.x-line.start.x) * cos(i*0.003) - (line.pointOfView.y - line.start.y) * sin(i*0.003) + line.start.x), ((line.pointOfView.y - line.start.y) * cos(i*0.003) + (line.pointOfView.x-line.start.x) * sin(i*0.003) + line.start.y)));
      //lines[i] = new LineOfSight(new Point(line.start.x, line.start.y), new Point(line.end.x-i*ecartX, line.end.y-i*ecartY));
-     lines[i].setEnd(lines[i].end.x, lines[i].end.y);
+     lines[i+nbLine/2].setEnd(lines[i+nbLine/2].end.x, lines[i+nbLine/2].end.y);
     }
   }
   
