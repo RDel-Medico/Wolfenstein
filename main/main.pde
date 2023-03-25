@@ -24,7 +24,7 @@ Vision view;
 boolean [] obstacles;
 
 //The number of line in the view
-int nbLineOfView = 700; // This can be 700, 350, 140, 100, 70, 50, 28, 20, 14, 10, 4, 2
+int nbLineOfView = 350; // This can be 700, 350, 140, 100, 70, 50, 28, 20, 14, 10, 4, 2
 
 //Used for debug (calcul time of function)
 int start, end;
@@ -92,16 +92,19 @@ void keyPressed() {
   float directionY = 0;
   
   if (keyCode == 'Z') { // Go forward
-    directionX = line.pointOfView.x - currentX;
-    directionY = line.pointOfView.y - currentY;
-    
-    // Move the player
-    currentY += (int)(directionY / 10);
-    currentX += (int)(directionX / 10);
-    
-    //Move the pointOfView
-    line.pointOfView.y += (int)(directionY / 10);
-    line.pointOfView.x += (int)(directionX / 10);
+  
+    if (view.lines[view.lines.length/2].distanceToObstacle > 10) {
+      directionX = line.pointOfView.x - currentX;
+      directionY = line.pointOfView.y - currentY;
+      
+      // Move the player
+      currentY += (int)(directionY / 10);
+      currentX += (int)(directionX / 10);
+      
+      //Move the pointOfView
+      line.pointOfView.y += (int)(directionY / 10);
+      line.pointOfView.x += (int)(directionX / 10);
+    }
   }
   
   if (keyCode == 'Q') { // Turning the camera to the left
