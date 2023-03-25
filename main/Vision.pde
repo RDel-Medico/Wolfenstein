@@ -1,9 +1,9 @@
 class Vision {
   LineOfSight[] lines;
-  int ecart;
+  float ecart;
   int nbLine;
   
-  Vision(LineOfSight line, int ecart, int nbLine) {
+  Vision(LineOfSight line, float ecart, int nbLine) {
     this.lines = new LineOfSight[nbLine+1];
     this.ecart = ecart;
     this.nbLine = nbLine;
@@ -12,8 +12,8 @@ class Vision {
   }
   
   void update(LineOfSight line) {
-    int ecartX;
-    int ecartY;
+    float ecartX;
+    float ecartY;
     
     if (abs(line.end.x-line.start.x) < abs(line.end.y-line.start.y)) { //Si c'est plutôt sur le côté
       ecartX = this.ecart;
@@ -117,11 +117,11 @@ class Vision {
       }
       
       int indexPlusProche = 0;
-      int distanceMin = 3000;
+      float distanceMin = 3000;
       for (int j = 0; j < allCollision.length; j++) { // Uniquement le plus proche
-        if (distanceMin > (int)sqrt((max(allCollision[j].x, this.lines[i].start.x)-min(allCollision[j].x, this.lines[i].start.x))+(max(allCollision[j].y, this.lines[i].start.y)-min(allCollision[j].y, this.lines[i].start.y)))) {
+        if (distanceMin > sqrt((max(allCollision[j].x, this.lines[i].start.x)-min(allCollision[j].x, this.lines[i].start.x))+(max(allCollision[j].y, this.lines[i].start.y)-min(allCollision[j].y, this.lines[i].start.y)))) {
           indexPlusProche = j;
-          distanceMin = (int)sqrt((max(allCollision[j].x, this.lines[i].start.x)-min(allCollision[j].x, this.lines[i].start.x))+(max(allCollision[j].y, this.lines[i].start.y)-min(allCollision[j].y, this.lines[i].start.y)));
+          distanceMin = sqrt((max(allCollision[j].x, this.lines[i].start.x)-min(allCollision[j].x, this.lines[i].start.x))+(max(allCollision[j].y, this.lines[i].start.y)-min(allCollision[j].y, this.lines[i].start.y)));
         }
       }
       if (allCollision.length > 0) {
@@ -146,14 +146,70 @@ class Vision {
   
   void display3d(Map map) {
     int pixel = 0;
+    //float distancePrevious = 0;
+    
+    //Point aTriangleHaut = new Point(0, (700 - (500 - (this.lines[this.lines.length / 2].distanceToObstacle)*20)) / 2);
+    //Point aTriangleBas = new Point(0, ((700 - (500 - (this.lines[this.lines.length / 2].distanceToObstacle)*20)) / 2) + (500 - (this.lines[this.lines.length / 2].distanceToObstacle)*20));
+    
     for (int i = this.lines.length / 2; i >= 0; i--) {
+      
+      
       this.lines[i].display3d(pixel*2, map); 
+      
+      /*if (this.lines[i].distanceToObstacle < distancePrevious) {
+        
+        
+        Point bTriangleHaut = new Point( pixel*2, (700 - (500 - (this.lines[i].distanceToObstacle)*20)) / 2);
+        Point bTriangleBas = new Point(pixel*2, ((700 - (500 - (this.lines[i].distanceToObstacle)*20)) / 2) + (500 - (this.lines[i].distanceToObstacle)*20));
+        
+        //fill(0,255,0);
+        fill(map.map[this.lines[i].cellCollided].red, map.map[this.lines[i].cellCollided].green, map.map[this.lines[i].cellCollided].blue);
+        //triangle(bTriangleHaut.x, aTriangleHaut.y, aTriangleHaut.x, aTriangleHaut.y, bTriangleHaut.x, bTriangleHaut.y);
+        //triangle(bTriangleBas.x, aTriangleBas.y, aTriangleBas.x, aTriangleBas.y, bTriangleBas.x, bTriangleBas.y);
+        
+        aTriangleHaut = new Point(pixel*2, (700 - (500 - (this.lines[i].distanceToObstacle)*20)) / 2);
+        aTriangleBas = new Point(pixel*2, ((700 - (500 - (this.lines[i].distanceToObstacle)*20)) / 2) + (500 - (this.lines[i].distanceToObstacle)*20));
+      } else if (this.lines[i].distanceToObstacle < distancePrevious) {
+        Point bTriangleHaut = new Point( pixel*2, (700 - (500 - (this.lines[i].distanceToObstacle)*20)) / 2);
+        Point bTriangleBas = new Point(pixel*2, ((700 - (500 - (this.lines[i].distanceToObstacle)*20)) / 2) + (500 - (this.lines[i].distanceToObstacle)*20));
+        
+        //fill(0,255,0);
+        fill(map.map[this.lines[i].cellCollided].red, map.map[this.lines[i].cellCollided].green, map.map[this.lines[i].cellCollided].blue);
+        //triangle(bTriangleHaut.y, aTriangleHaut.x, aTriangleHaut.x, aTriangleHaut.y, bTriangleHaut.x, bTriangleHaut.y);
+        //triangle(bTriangleBas.y, aTriangleBas.x, aTriangleBas.x, aTriangleBas.y, bTriangleBas.x, bTriangleBas.y);
+        
+        aTriangleHaut = new Point(pixel*2, (700 - (500 - (this.lines[i].distanceToObstacle)*20)) / 2);
+        aTriangleBas = new Point(pixel*2, ((700 - (500 - (this.lines[i].distanceToObstacle)*20)) / 2) + (500 - (this.lines[i].distanceToObstacle)*20));
+      }
+      
+      
+      //AJOUTER FONCTION QUI TRACE TRIANGLE ENTRE PREMIER  SAMEDISTANCE ET DERNIER*/
+      
+      
       pixel++;
+      //distancePrevious = this.lines[i].distanceToObstacle;
     }
+    
+    //aTriangleHaut = this.lines[this.lines.length / 2].start;
+    //aTriangleBas = this.lines[this.lines.length / 2].end;
     
     for (int i = this.lines.length / 2; i < this.lines.length; i++) {
       this.lines[i].display3d(pixel*2, map); 
+      /*if (this.lines[i].distanceToObstacle != distancePrevious) {
+        Point bTriangleHaut = this.lines[i].start;
+        Point bTriangleBas = this.lines[i].end;
+        fill(255,0,0);
+        //fill(map.map[this.lines[i].cellCollided].red, map.map[this.lines[i].cellCollided].green, map.map[this.lines[i].cellCollided].blue);
+        //triangle(bTriangleHaut.x, aTriangleHaut.y, aTriangleHaut.x, aTriangleHaut.y, bTriangleHaut.x, bTriangleHaut.y);
+        //triangle(bTriangleBas.x, aTriangleBas.y, aTriangleBas.x, aTriangleBas.y, bTriangleBas.x, bTriangleBas.y);
+        
+        aTriangleHaut = this.lines[i].start;
+        aTriangleBas = this.lines[i].end;
+      }*/
+      
+      
       pixel++;
+      //distancePrevious = this.lines[i].distanceToObstacle;
     }
   }
 }

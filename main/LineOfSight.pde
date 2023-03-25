@@ -1,15 +1,19 @@
 class Point {
-  int x;
-  int y;
+  float x;
+  float y;
   
   Point() {
     x = 0;
     y = 0;
   }
   
-  Point(int x, int y) {
+  Point(float x, float y) {
     this.x = x;
     this.y = y;
+  }
+  
+  void setX(float x) {
+    this.x = x;
   }
   
   void display () {
@@ -19,8 +23,10 @@ class Point {
   }
 }
 
+
+
 class LineOfSight extends Line {
-  int distanceToObstacle;
+  float distanceToObstacle;
   int cellCollided;
   Point collision;
   boolean borderCollided;
@@ -50,8 +56,10 @@ class LineOfSight extends Line {
   }
   
   void display3d(int x, Map map) {
+    
     strokeWeight(2);
-    int topAndBot = (700 - (this.distanceToObstacle*50)) / 2;
+    float hauteur = 500 - (this.distanceToObstacle)*20;
+    float topAndBot = (700 - (hauteur)) / 2;
     stroke(#FF8B8B);
     line(x, 0, x, height);
     
@@ -61,15 +69,15 @@ class LineOfSight extends Line {
       stroke(map.map[this.cellCollided].red, map.map[this.cellCollided].green, map.map[this.cellCollided].blue);
     }
     
-    line(x, topAndBot, x, topAndBot + this.distanceToObstacle*50);
+    line(x, topAndBot, x, topAndBot + hauteur);
   }
   
-  void setEnd(int x, int y) {
+  void setEnd(float x, float y) {
     this.end.x = x;
     this.end.y = y;
     
-    int lgX = max(this.end.x, this.start.x) - min(this.end.x, this.start.x);
-    int lgY = max(this.end.y, this.start.y) - min(this.end.y, this.start.y);
+    float lgX = max(this.end.x, this.start.x) - min(this.end.x, this.start.x);
+    float lgY = max(this.end.y, this.start.y) - min(this.end.y, this.start.y);
     
     lgX = this.end.x < this.start.x ? -lgX : lgX;
     lgY = this.end.y < this.start.y ? -lgY : lgY;
@@ -77,6 +85,11 @@ class LineOfSight extends Line {
       this.end.x += lgX;
       this.end.y += lgY;
     }
+  }
+  
+  void setStart(float x, float y) {
+    this.start.x = x;
+    this.start.y = y;
   }
 }
 
@@ -112,13 +125,13 @@ class Line {
     
     */
     
-    int A1 = line.end.y - line.start.y;
-    int B1 = line.start.x - line.end.x;
-    int C1 = A1 * line.start.x + B1 * line.start.y;
+    float A1 = line.end.y - line.start.y;
+    float B1 = line.start.x - line.end.x;
+    float C1 = A1 * line.start.x + B1 * line.start.y;
     
-    int A2 = this.end.y - this.start.y;
-    int B2 = this.start.x - this.end.x;
-    int C2 = A2 * this.start.x + B2 * this.start.y;
+    float A2 = this.end.y - this.start.y;
+    float B2 = this.start.x - this.end.x;
+    float C2 = A2 * this.start.x + B2 * this.start.y;
     
     /*
     Then we resolve the system: (since we are resolving 2 lines equation there can be only combination of (x, y) that resolve this equation) (we dont take in consideration parallel line and colinear line)
@@ -153,10 +166,10 @@ class Line {
     We now have the x and y equation :)
     */
     
-    int denominator = (B2 * A1 - B1 * A2);
+    float denominator = (B2 * A1 - B1 * A2);
     
-    int x;
-    int y;
+    float x;
+    float y;
     
     if (denominator != 0) {
       x = (B2 * C1 - B1 * C2) / denominator;

@@ -1,9 +1,12 @@
-int longeurCase = 50;
-int largeurCase = 50;
+int longeurCase = 100;
+int largeurCase = 100;
 
 Map terrain;
 
 int startingCell;
+
+int currentX;
+int currentY;
 
 Point a;
 Point b;
@@ -35,10 +38,28 @@ void setup() {
   }
   
   a = new Point(terrain.map[startingCell].posX + longeurCase / 2, terrain.map[startingCell].posY + largeurCase / 2);
+  currentX = terrain.map[startingCell].posX + longeurCase / 2;
+  currentY = terrain.map[startingCell].posY + largeurCase / 2;
   b = new Point();
   
   line = new LineOfSight(a, b); 
   view = new Vision(line, 1, 350);
+}
+
+void keyPressed() {
+  if(keyCode == UP) {
+    currentY--;
+    println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+  }
+ if (keyCode == DOWN) {
+    currentY++;
+  }
+ if (keyCode == LEFT) {
+    currentX--;
+  }
+ if (keyCode == RIGHT) {
+    currentX++;
+  }
 }
 
 void draw() {
@@ -52,6 +73,11 @@ void draw() {
   
   start = millis();
   line.setEnd(mouseX, mouseY);
+  end = millis();
+  println("Time for vision update : " + (end-start));
+  
+  start = millis();
+  line.setStart(currentX, currentY);
   end = millis();
   println("Time for vision update : " + (end-start));
   
@@ -76,7 +102,7 @@ void draw() {
   println("Time for collision display : " + (end-start));
   
   start = millis();
-  //view.display3d(terrain);
+  view.display3d(terrain);
   end = millis();
   println("Time for collision display : " + (end-start));
   
