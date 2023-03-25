@@ -14,10 +14,13 @@ class Cell {
   
   Cell(boolean obstacle, int x, int y, int largeur, int longeur) {
     this.obstacle = obstacle;
+    
     this.posX = x;
     this.posY = y;
+    
     this.largeur = largeur;
     this.longeur = longeur;
+    
     this.color3d = 0;
   }
   

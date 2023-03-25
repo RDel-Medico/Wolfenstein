@@ -1,143 +1,142 @@
+
+/*
+This class represent the vision of something it is composed of lines, each line representing a column of pixel on a 3d representation.
+ */
 class Vision {
-  LineOfSight[] lines;
-  float ecart;
-  int nbLine;
-  
-  Vision(LineOfSight line, float ecart, int nbLine) {
+  LineOfSight[] lines; // All the line of sight of this vision
+
+  Vision(int nbLine) {
     this.lines = new LineOfSight[nbLine+1];
-    this.ecart = ecart;
-    this.nbLine = nbLine;
-    
-    update(line);
   }
-  
+
+  /*
+  Update all the line the vision centered around line
+   
+   PARAM : line : line at the center of the vision
+   */
   void update(LineOfSight line) {
-    for (int i = -(nbLine/2); i < nbLine/2 + 1; i++) { // On trace toutes les lignes de vision à gauche de la ligne centrale
-    lines[i+nbLine/2] = new LineOfSight(new Point(line.start.x, line.start.y), new Point(((line.pointOfView.x-line.start.x) * cos(i*0.003) - (line.pointOfView.y - line.start.y) * sin(i*0.003) + line.start.x), ((line.pointOfView.y - line.start.y) * cos(i*0.003) + (line.pointOfView.x-line.start.x) * sin(i*0.003) + line.start.y)));
-     //lines[i] = new LineOfSight(new Point(line.start.x, line.start.y), new Point(line.end.x-i*ecartX, line.end.y-i*ecartY));
-     lines[i+nbLine/2].setEnd(lines[i+nbLine/2].end.x, lines[i+nbLine/2].end.y);
+    for (int i = -(this.lines.length/2); i < this.lines.length/2 + 1; i++) { // All line
+      Point currentPos = new Point(line.start.x, line.start.y); // First point of the line of sight
+
+      float previousX = line.pointOfView.x-line.start.x; // center x on 0 to help rotation
+      float previousY = line.pointOfView.y - line.start.y; // center y on 0 to help rotation
+      float theta = i*0.0015*(width/nbLineOfView); // Angle of rotation
+      Point watch = new Point(previousX * cos(theta) - previousY * sin(theta) + line.start.x, previousY * cos(theta) + previousX * sin(theta) + line.start.y); // Second point of the line of sight
+
+      lines[i+this.lines.length/2] = new LineOfSight(currentPos, watch); // Line From curentPos to watch
+      lines[i+this.lines.length/2].setEnd(lines[i+this.lines.length/2].end.x, lines[i+this.lines.length/2].end.y); //Make the line go to a wall
     }
   }
-  
-  
+
+  /*
+  Display all the line of the line of sight
+   */
   void display() {
     for (int i = 0; i < lines.length; i++) {
       lines[i].display();
     }
   }
-  
+
   void updateCollision(Map map) {
-    for (int i = 0; i < this.lines.length; i++) { // On regarde les collisions pour chaque lignes
-    
+    for (int i = 0; i < this.lines.length; i++) { // For each line of sight
+
       this.lines[i].collisions = new Point[0];
       Point [] allCollision = new Point[0];
       int [] indexCollision = new int[0];
-      
-      for (int j = 0; j < map.grid.length; j++) { // Les collisions avec chaques case de la grille
-        if (map.grid[j].obstacle) { //Si la case en question est un obstacle
-          Point collid = null;
-          if (this.lines[i].start.x < map.grid[j].posX) { // Si on est a gauche de l'obstacle
-            //Detection collision entre lines[i] && ligne gauche de l'obstacle
-            collid = this.lines[i].SegmentIntersect(new Line(new Point(map.grid[j].posX, map.grid[j].posY), new Point(map.grid[j].posX, map.grid[j].posY + map.grid[j].longeur)));
-          } else if (this.lines[i].start.x > map.grid[j].posX + map.grid[j].largeur) { // Si on est a droite de l'obstable
-            //Detection collision entre lines[i] && ligne droite de l'obstacle
-            collid = this.lines[i].SegmentIntersect(new Line(new Point(map.grid[j].posX + map.grid[j].largeur, map.grid[j].posY), new Point(map.grid[j].posX + map.grid[j].largeur, map.grid[j].posY + map.grid[j].longeur)));
+
+      for (int j = 0; j < map.grid.length; j++) { // On all cell
+        if (map.grid[j].obstacle) { // If the cell is an obstacle
+
+          Point collidX = this.lines[i].collidX(map.grid[j]); // We check if the line of sight collid with the left or right side of the current cell
+          Point collidY = this.lines[i].collidY(map.grid[j]); // We check if the line of sight collid with the top or bottom side of the current cell
+
+          if (collidX != null) { // If there is collision with the left or right side of the current cell, we save the collision
+            allCollision = addPoint(collidX, allCollision);
+            indexCollision = append(indexCollision, j);
           }
-          
-          if (collid != null) {
-              Point[] temp = new Point [allCollision.length + 1];
-              int[] temp2 = new int [indexCollision.length + 1];
-              for (int k = 0; k < allCollision.length; k++) {
-                temp[k] = allCollision[k];
-                temp2[k] = indexCollision[k];
-              }
-              temp[allCollision.length] = collid;
-              this.lines[i].addCollision(collid);
-              temp2[indexCollision.length] = j;
-              allCollision = temp;
-              indexCollision = temp2;
-            }
-            
-            
-          if (this.lines[i].start.y > map.grid[j].posY + map.grid[j].longeur) { // Si on est dessous l'obstable
-            //Detection collision entre lines[i] && ligne dessous de l'obstacle
-            collid = this.lines[i].SegmentIntersect(new Line(new Point(map.grid[j].posX, map.grid[j].posY + map.grid[j].longeur), new Point(map.grid[j].posX + map.grid[j].largeur, map.grid[j].posY + map.grid[j].longeur)));
-          } else if (this.lines[i].start.y < map.grid[j].posY) { // Si on est au dessus de l'obstacle
-            //Detection collision entre lines[i] && ligne haut de l'obstacle
-            collid = this.lines[i].SegmentIntersect(new Line(new Point(map.grid[j].posX, map.grid[j].posY), new Point(map.grid[j].posX + map.grid[j].largeur, map.grid[j].posY)));
-          }
-          
-          if (collid != null) {
-              Point[] temp = new Point [allCollision.length + 1];
-              int[] temp2 = new int [indexCollision.length + 1];
-              for (int k = 0; k < allCollision.length; k++) {
-                temp[k] = allCollision[k];
-                temp2[k] = indexCollision[k];
-              }
-              temp[allCollision.length] = collid;
-              this.lines[i].addCollision(collid);
-              temp2[indexCollision.length] = j;
-              allCollision = temp;
-              indexCollision = temp2;
-            }
-        }
-      }
-      Point collid = this.lines[i].SegmentIntersect(new Line(new Point(0, 0), new Point(width, 0))); // Collid devient point intersection avec mur du haut
-      if (collid == null) {
-        collid = this.lines[i].SegmentIntersect(new Line(new Point(0, height), new Point(width, height))); // Collid devient point intersection avec mur du bas
-        if (collid == null) {
-          collid = this.lines[i].SegmentIntersect(new Line(new Point(0, 0), new Point(0, height))); // Collid devient point intersection avec mur de gauche
-          if (collid == null) {
-            collid = this.lines[i].SegmentIntersect(new Line(new Point(width, 0), new Point(width, height))); // Collid devient point intersection avec mur de droite
+
+          if (collidY != null) { // If there is collision with the top or bottom side of the current cell, we save the collision
+            allCollision = addPoint(collidY, allCollision);
+            indexCollision = append(indexCollision, j);
           }
         }
       }
-      
-      if (collid != null) {
-        Point[] temp = new Point [allCollision.length + 1];
-        int[] temp2 = new int [indexCollision.length + 1];
-        for (int k = 0; k < allCollision.length; k++) {
-          temp[k] = allCollision[k];
-          temp2[k] = indexCollision[k];
-        }
-        temp[allCollision.length] = collid;
-        this.lines[i].addCollision(collid);
-        temp2[indexCollision.length] = -1;
-        allCollision = temp;
-        indexCollision = temp2;
+
+      Point collidBorder = this.lines[i].collidBorder(); // We check if the line of sight collid with the border
+
+      if (collidBorder != null) { // If there is collision with the border, we save the collision
+        allCollision = addPoint(collidBorder, allCollision);
+        indexCollision = append(indexCollision, -1);
       }
-      
-      int indexPlusProche = 0;
-      float distanceMin = 3000;
-      for (int j = 0; j < allCollision.length; j++) { // Uniquement le plus proche
-        if (distanceMin > sqrt(pow((max(allCollision[j].x, this.lines[i].start.x)-min(allCollision[j].x, this.lines[i].start.x)),2)+pow((max(allCollision[j].y, this.lines[i].start.y)-min(allCollision[j].y, this.lines[i].start.y)),2))) {
+
+      this.lines[i].collisions = allCollision; // We save all the collision (usefull for the debug tool)
+
+
+      int indexPlusProche = 0; // Contain the index of the closest cell hit (or -1 if the closest collision is a border)
+      float distanceMin = integerLimit; // Contain the distance to the closest collision from the player
+
+      for (int j = 0; j < allCollision.length; j++) { // We check all the collision to find the closest
+
+        float longeur = max(allCollision[j].x, this.lines[i].start.x)-min(allCollision[j].x, this.lines[i].start.x);
+        float hauteur = (max(allCollision[j].y, this.lines[i].start.y)-min(allCollision[j].y, this.lines[i].start.y));
+
+        if (distanceMin > sqrt(pow(longeur, 2) + pow(hauteur, 2))) {
+
           indexPlusProche = j;
-          distanceMin = sqrt(pow((max(allCollision[j].x, this.lines[i].start.x)-min(allCollision[j].x, this.lines[i].start.x)),2)+pow((max(allCollision[j].y, this.lines[i].start.y)-min(allCollision[j].y, this.lines[i].start.y)),2));
+          distanceMin = sqrt(pow(longeur, 2)+pow(hauteur, 2));
         }
       }
+
       if (allCollision.length > 0) {
-        if (distanceMin <= this.lines[i].distanceToObstacle) {
-          this.lines[i].distanceToObstacle = distanceMin;
-          this.lines[i].SetCollision(allCollision[indexPlusProche]);
-          if (indexCollision[indexPlusProche] == -1) {
-            this.lines[i].setBorderCollided();
-          } else {
-            this.lines[i].setCellColided(indexCollision[indexPlusProche]);
-          }
-        }
+        
+        this.lines[i].distanceToObstacle = distanceMin; //Save distance to the point of collision
+        this.lines[i].SetCollision(allCollision[indexPlusProche]); // Save collision point
+        this.lines[i].setCellColided(indexCollision[indexPlusProche]);
+        
+      } else { // If we didn't found a collision (wich is not supposed to append but append sometimes) we simply copy all the value from a neighbour line
+      
+        int neighbour = i == 0 ? 1 : -1; // We choose an existing neighbour
+
+        this.lines[i].distanceToObstacle = this.lines[i+neighbour].distanceToObstacle;
+        this.lines[i].collision = this.lines[i+neighbour].collision;
+        this.lines[i].cellCollided = this.lines[i+neighbour].cellCollided;
+        
       }
-    } 
+    }
   }
-  
+
+  /*
+  Display all collsion in 2d
+   */
   void displayCollision(boolean all) {
     for (int i = 0; i < this.lines.length; i++) {
-      this.lines[i].displayCollision(all); 
+      this.lines[i].displayCollision(all);
     }
   }
-  
+
+  /*
+  Display the vision in 3d
+   */
   void display3d(Map map) {
     for (int i = 0; i < this.lines.length; i++) {
-      this.lines[i].display3d(i*2, map);
+      this.lines[i].display3d(i*(width / nbLineOfView), map);
     }
   }
+}
+
+/*
+add a point at the end of a tab and return it
+ PARAM :
+ - point : the point we want to add to the tab
+ - points : the tab in wich we want to add the point
+ 
+ RETURN : The tab passed in parameters with point added to the end
+ */
+Point[] addPoint(Point point, Point[] points) {
+  Point[] temp = new Point[points.length+1];
+  for (int i = 0; i < points.length; i++) {
+    temp[i] = points[i];
+  }
+  temp[points.length] = point;
+  return temp;
 }
