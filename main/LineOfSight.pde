@@ -79,21 +79,28 @@ class LineOfSight extends Line {
     
   }
   
+  /*
+  Display the wall, the ceiling and the ground at the row x of the display based on the distanceToObstacle of this object 
+  */
   void display3d(int x, Map map) {
+    float topAndBot = this.distanceToObstacle / 2; // Size of ground / ceilling (they both have the same size)
     
-    strokeWeight(2);
-    float hauteur = height - this.distanceToObstacle;
-    float topAndBot = (height - hauteur ) / 2;
     stroke(#956400);
-    line(x, 0, x, height);
+    strokeWeight(2);
+    line(x, 0, x, height); // Line that represent ground and ceilling
     
-    if (this.borderCollided) {
+    if (this.borderCollided) { // If the collision is on a border we paint it grey otherwise we paint it the color of the obstacle
       stroke(150);
     } else {
-      stroke(map.map[this.cellCollided].red, map.map[this.cellCollided].green, map.map[this.cellCollided].blue);
+      stroke(map.grid[this.cellCollided].color3d);
     }
     
-    line(x, topAndBot, x, height - topAndBot);
+    line(x, topAndBot, x, height - topAndBot); //Line that represent the wall
+    
+    stroke(0);
+    strokeWeight(10);
+    point(x, topAndBot); //The two point at the top and bottom of the wall to create a proper delimitation between wall / ceiling
+    point(x, height - topAndBot);
   }
   
   void updateVision() {
@@ -113,6 +120,8 @@ class LineOfSight extends Line {
       this.end.x += lgX;
       this.end.y += lgY;
     }
+    this.end.x = (int)this.end.x;
+    this.end.y = (int)this.end.y;
   }
   
   void setStart(float x, float y) {

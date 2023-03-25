@@ -23,14 +23,10 @@ class Vision {
       ecartX = this.ecart;
     }
     
-    for (int i = 0; i < (this.nbLine - (this.nbLine%2)) / 2; i++) { // On trace toutes les lignes de vision à gauche de la ligne centrale
-      lines[i] = new LineOfSight(new Point(line.start.x, line.start.y), new Point(line.end.x-i*ecartX, line.end.y-i*ecartY));
-    }
-    
-    lines[(nbLine - (nbLine%2)) / 2] = line; // On trace la ligne centrale
-    
-    for (int i = ((nbLine - (nbLine%2)) / 2) + 1; i < nbLine + 1; i++) {  // On trace toutes les lignes de vision à droite de la ligne centrale
-      lines[i] = new LineOfSight(new Point(line.start.x, line.start.y), new Point(line.end.x+(i-((nbLine - (nbLine%2)) / 2))*ecartX, line.end.y+(i-((nbLine - (nbLine%2)) / 2))*ecartY));
+    for (int i = 0; i < nbLine + 1; i++) { // On trace toutes les lignes de vision à gauche de la ligne centrale
+    lines[i] = new LineOfSight(new Point(line.start.x, line.start.y), new Point(((line.pointOfView.x-line.start.x) * cos(i*0.003) - (line.pointOfView.y - line.start.y) * sin(i*0.003) + line.start.x), ((line.pointOfView.y - line.start.y) * cos(i*0.003) + (line.pointOfView.x-line.start.x) * sin(i*0.003) + line.start.y)));
+     //lines[i] = new LineOfSight(new Point(line.start.x, line.start.y), new Point(line.end.x-i*ecartX, line.end.y-i*ecartY));
+     lines[i].setEnd(lines[i].end.x, lines[i].end.y);
     }
   }
   
@@ -48,15 +44,15 @@ class Vision {
       Point [] allCollision = new Point[0];
       int [] indexCollision = new int[0];
       
-      for (int j = 0; j < map.map.length; j++) { // Les collisions avec chaques case de la grille
-        if (map.map[j].obstacle) { //Si la case en question est un obstacle
+      for (int j = 0; j < map.grid.length; j++) { // Les collisions avec chaques case de la grille
+        if (map.grid[j].obstacle) { //Si la case en question est un obstacle
           Point collid = null;
-          if (this.lines[i].start.x < map.map[j].posX) { // Si on est a gauche de l'obstacle
+          if (this.lines[i].start.x < map.grid[j].posX) { // Si on est a gauche de l'obstacle
             //Detection collision entre lines[i] && ligne gauche de l'obstacle
-            collid = this.lines[i].SegmentIntersect(new Line(new Point(map.map[j].posX, map.map[j].posY), new Point(map.map[j].posX, map.map[j].posY + map.map[j].longeur)));
-          } else if (this.lines[i].start.x > map.map[j].posX + map.map[j].largeur) { // Si on est a droite de l'obstable
+            collid = this.lines[i].SegmentIntersect(new Line(new Point(map.grid[j].posX, map.grid[j].posY), new Point(map.grid[j].posX, map.grid[j].posY + map.grid[j].longeur)));
+          } else if (this.lines[i].start.x > map.grid[j].posX + map.grid[j].largeur) { // Si on est a droite de l'obstable
             //Detection collision entre lines[i] && ligne droite de l'obstacle
-            collid = this.lines[i].SegmentIntersect(new Line(new Point(map.map[j].posX + map.map[j].largeur, map.map[j].posY), new Point(map.map[j].posX + map.map[j].largeur, map.map[j].posY + map.map[j].longeur)));
+            collid = this.lines[i].SegmentIntersect(new Line(new Point(map.grid[j].posX + map.grid[j].largeur, map.grid[j].posY), new Point(map.grid[j].posX + map.grid[j].largeur, map.grid[j].posY + map.grid[j].longeur)));
           }
           
           if (collid != null) {
@@ -74,12 +70,12 @@ class Vision {
             }
             
             
-          if (this.lines[i].start.y > map.map[j].posY + map.map[j].longeur) { // Si on est dessous l'obstable
+          if (this.lines[i].start.y > map.grid[j].posY + map.grid[j].longeur) { // Si on est dessous l'obstable
             //Detection collision entre lines[i] && ligne dessous de l'obstacle
-            collid = this.lines[i].SegmentIntersect(new Line(new Point(map.map[j].posX, map.map[j].posY + map.map[j].longeur), new Point(map.map[j].posX + map.map[j].largeur, map.map[j].posY + map.map[j].longeur)));
-          } else if (this.lines[i].start.y < map.map[j].posY) { // Si on est au dessus de l'obstacle
+            collid = this.lines[i].SegmentIntersect(new Line(new Point(map.grid[j].posX, map.grid[j].posY + map.grid[j].longeur), new Point(map.grid[j].posX + map.grid[j].largeur, map.grid[j].posY + map.grid[j].longeur)));
+          } else if (this.lines[i].start.y < map.grid[j].posY) { // Si on est au dessus de l'obstacle
             //Detection collision entre lines[i] && ligne haut de l'obstacle
-            collid = this.lines[i].SegmentIntersect(new Line(new Point(map.map[j].posX, map.map[j].posY), new Point(map.map[j].posX + map.map[j].largeur, map.map[j].posY)));
+            collid = this.lines[i].SegmentIntersect(new Line(new Point(map.grid[j].posX, map.grid[j].posY), new Point(map.grid[j].posX + map.grid[j].largeur, map.grid[j].posY)));
           }
           
           if (collid != null) {
@@ -151,16 +147,8 @@ class Vision {
   }
   
   void display3d(Map map) {
-    int pixel = 0;
-    
-    for (int i = this.lines.length / 2; i >= 0; i--) {
-      this.lines[i].display3d(pixel*2, map);
-      pixel++;
-    }
-    
-    for (int i = this.lines.length / 2 + 1; i < this.lines.length; i++) {
-      this.lines[i].display3d(pixel*2, map);
-      pixel++;
+    for (int i = 0; i < this.lines.length; i++) {
+      this.lines[i].display3d(i*2, map);
     }
   }
 }

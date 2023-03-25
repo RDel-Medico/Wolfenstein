@@ -41,17 +41,17 @@ void setup() {
   
   terrain.setObstacle(obstacles);
   
-  while(terrain.map[startingCell].obstacle) {
+  while(terrain.grid[startingCell].obstacle) {
     startingCell = (int)random(terrain.nbCell);
   }
   
-  a = new Point(terrain.map[startingCell].posX + longeurCase / 2, terrain.map[startingCell].posY + largeurCase / 2);
-  currentX = terrain.map[startingCell].posX + longeurCase / 2;
-  currentY = terrain.map[startingCell].posY + largeurCase / 2;
-  b = new Point(terrain.map[startingCell].posX + longeurCase / 2, terrain.map[startingCell].posY);
+  a = new Point(terrain.grid[startingCell].posX + longeurCase / 2, terrain.grid[startingCell].posY + largeurCase / 2);
+  currentX = terrain.grid[startingCell].posX + longeurCase / 2;
+  currentY = terrain.grid[startingCell].posY + largeurCase / 2;
+  b = new Point(terrain.grid[startingCell].posX + longeurCase / 2, terrain.grid[startingCell].posY);
   
   line = new LineOfSight(a, b);
-  line.pointOfView = new Point(terrain.map[startingCell].posX + longeurCase / 2, terrain.map[startingCell].posY);
+  line.pointOfView = new Point(terrain.grid[startingCell].posX + longeurCase / 2, terrain.grid[startingCell].posY);
   view = new Vision(line, 1, nbLineOfView);
 }
 
@@ -115,10 +115,6 @@ void keyPressed() {
 
 void draw() {
   background(200);
-  start = millis();
-  line.updateVision();
-  end = millis();
-  println("Time for vision update : " + (end-start));
   
   start = millis();
   line.setStart(currentX, currentY);
@@ -134,6 +130,11 @@ void draw() {
   view.updateCollision(terrain);
   end = millis();
   println("Time for collision update : " + (end-start));
+  
+  start = millis();
+  line.updateVision();
+  end = millis();
+  println("Time for vision update : " + (end-start));
   
   if (display2d) {
     
@@ -161,8 +162,6 @@ void draw() {
     end = millis();
     println("Time for 3d display : " + (end-start)); 
   }
-  
-  println("Line of vision : \n Start at : (" + line.start.x + ", " + line.start.y + ")\n And end at : (" + line.end.x + ", " + line.end.y + ")");
   
   for (int i = 0; i < 15; i++) {
     println();
