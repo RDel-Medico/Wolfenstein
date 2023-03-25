@@ -31,6 +31,8 @@ class LineOfSight extends Line {
   Point collision;
   boolean borderCollided;
   
+  Point pointOfView;
+  
   
   LineOfSight (Point start, Point end) {
     super(start, end); 
@@ -58,8 +60,8 @@ class LineOfSight extends Line {
   void display3d(int x, Map map) {
     
     strokeWeight(2);
-    float hauteur = 500 - (this.distanceToObstacle)*20;
-    float topAndBot = (700 - (hauteur)) / 2;
+    float hauteur = height - this.distanceToObstacle;
+    float topAndBot = (height - hauteur ) / 2;
     stroke(#FF8B8B);
     line(x, 0, x, height);
     
@@ -69,7 +71,11 @@ class LineOfSight extends Line {
       stroke(map.map[this.cellCollided].red, map.map[this.cellCollided].green, map.map[this.cellCollided].blue);
     }
     
-    line(x, topAndBot, x, topAndBot + hauteur);
+    line(x, topAndBot, x, height - topAndBot);
+  }
+  
+  void updateVision() {
+    setEnd(this.pointOfView.x, this.pointOfView.y);
   }
   
   void setEnd(float x, float y) {
