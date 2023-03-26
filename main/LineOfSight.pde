@@ -251,6 +251,7 @@ class LineOfSight extends Line {
       stroke(map.grid[this.cellCollided].color3d);
     }
 
+    strokeWeight(width / nbLineOfView);
     line(x, topAndBot, x, height - topAndBot); //Line that represent the wall
 
     //The two point at the top and bottom of the wall to create a proper delimitation between wall / ceiling

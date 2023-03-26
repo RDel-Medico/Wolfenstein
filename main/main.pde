@@ -93,7 +93,7 @@ void keyReleased() {
     keyPresseds[2] = false;
   }
 }
-
+  
 void draw() {
   background(200);
   
@@ -136,13 +136,13 @@ void draw() {
     end = millis();
     println("Time for collision display : " + (end-start));
   }
-  
+ 
   if (display3d) {
     start = millis();
     displayBackground();
     view.display3d(terrain); // We display the 3d render
     end = millis();
-    println("Time for 3d display : " + (end-start)); 
+    println("Time for 3d display : " + (end-start));
   }
   
   fill(255, 255, 255);
