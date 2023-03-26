@@ -12,12 +12,9 @@ Only movement has been implemented (no enemies, weapons, etc.)
 
 ### Dependencies
 
-* Describe any prerequisites, libraries, OS version, etc., needed before installing program.
-* ex. Windows 10
+* In order to run the program you will need Open JDK 17 (https://adoptium.net/)
 
 ### Installing
-
-* In order to run the program you will need Open JDK 17 (https://adoptium.net/)
 
 Once you have Open JDK 17 you can install the .zip file and extract it.
 Then you can choose according to your OS and in capacity of your pc the version you want:
