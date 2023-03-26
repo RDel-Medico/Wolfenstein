@@ -194,6 +194,7 @@ void manageMovement() {
     line.pointOfView.y += line.pointOfView.x < line.start.x ? 1 : -1;
   }
   
+  //Move the point of view
   if (keyPresseds[2]) {
     line.pointOfView.x += line.pointOfView.y < line.start.y ? 1 : -1;
     line.pointOfView.y += line.pointOfView.x < line.start.x ? -1 : 1;
