@@ -17,6 +17,7 @@ Only movement has been implemented (no enemies, weapons, etc.)
 ### Installing
 
 Once you have Open JDK 17 you can install the .zip file and extract it.
+You can also use this website to install only 1 directory of this repository : https://download-directory.github.io/
 Then you can choose according to your OS and in capacity of your pc the version you want:
 
 * For Linux :
@@ -40,7 +41,7 @@ Go under the version you choosed to run and execute the main.exe (./Wolfenstein-
 ### Help
 
 * The generation of the map is totally random (maybe i will implement a proper maze generator in a later update), so it's common to be in weird situation when you appear such as being in a 1 by 1 room, don't hesitate to go in the 2D representation (the key to do that is shown on screen).
-And reload the programm if you are stuck.
+And/or reload the map (the key is also shown on screen).
 
 ## Authors
 
