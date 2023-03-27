@@ -24,7 +24,7 @@ Vision view;
 boolean [] obstacles;
 
 //The number of line in the view
-int nbLineOfView = 350; // This can be 700, 350, 140, 100, 70, 50, 28, 20, 14, 10, 4, 2
+int nbLineOfView = 700; // This can be 700, 350, 140, 100, 70, 50, 28, 20, 14, 10, 4, 2
 
 //Used for debug (calcul time of function)
 int start, end;
@@ -37,6 +37,14 @@ boolean displayTest = false;
 
 boolean []keyPresseds = new boolean[3]; // [0] = true if Z is pressed, [1] = true if Q is pressed, [2] = true if D is pressed
 
+  PImage img;
+
+int offset = 0;
+boolean offsetLeft = false;
+
+boolean shooting = false;
+int frameOfShoot = 0;
+
 void setup() {
   size(700, 700);
   //Map génération
@@ -47,6 +55,10 @@ void setup() {
 
   //Player view
   view = new Vision(nbLineOfView);
+  
+  img = loadImage("gun.png");
+  
+  img.resize(img.width*3, img.height*3);
 }
 
 void keyPressed() {
@@ -140,9 +152,26 @@ void draw() {
   if (display3d) {
     start = millis();
     displayBackground();
+    noStroke();
+    fill(#AF8100);
+    rect(0,height/2, width, height/2);
     view.display3d(terrain); // We display the 3d render
     end = millis();
     println("Time for 3d display : " + (end-start));
+    
+    image(img, width-img.width+offset, height-img.height+30+offset); // Image of the gun
+  }
+  
+  if (shooting) { // Manage the shoot
+    frameOfShoot++;
+    noStroke();
+    fill(0);
+    circle(width-img.width+offset - frameOfShoot * 10, height-img.height+30+offset - frameOfShoot * 10, 10);
+      
+    if (frameOfShoot == 30) {
+      shooting = false;
+      frameOfShoot = 0;
+    }
   }
   
   fill(255, 255, 255);
@@ -155,6 +184,12 @@ void draw() {
   text("Press Z to walk forward", 10, 140);
   
   println("------------------------------------------------");
+}
+
+void mouseClicked() {
+  if (!shooting) {
+    shooting = true;
+  }
 }
 
 void displayBackground() {
@@ -173,6 +208,19 @@ void manageMovement() {
   if (keyPresseds[0]) {
     float directionX = 0;
     float directionY = 0;
+    
+    
+    if (offset == 30) { // Movement of the gun
+      offsetLeft = false;
+    } else if (offset == -30) {
+      offsetLeft = true;
+    }
+    
+    if (offsetLeft) { // Movement of the gun
+      offset+=2;
+    } else {
+      offset-=2; 
+    }
   
     if (view.lines[view.lines.length/2].distanceToObstacle > 10) {
       directionX = line.pointOfView.x - currentX;
