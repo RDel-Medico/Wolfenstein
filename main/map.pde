@@ -5,12 +5,14 @@ class Map {
   Cell[] grid; // All the cell of the map
   int nbCell; // Amount of cell in total
   int largeur; // Amount of cell in on line
+  int longeur; // Amount of cell in on line
 
   Map(int largeurMap, int longeurMap, int largeurCase, int longeurCase) {
     int nbCellLargeur = (largeurMap - largeurMap%largeurCase) / largeurCase;
     int nbCellLongeur = (longeurMap - longeurMap%longeurCase) / longeurCase;
 
     this.largeur = nbCellLargeur;
+    this.longeur = nbCellLongeur;
 
     this.nbCell = nbCellLargeur*nbCellLongeur;
 

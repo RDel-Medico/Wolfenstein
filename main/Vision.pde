@@ -92,6 +92,14 @@ class Vision {
         this.lines[i].distanceToObstacle = distanceMin; //Save distance to the point of collision
         this.lines[i].SetCollision(allCollision[indexPlusProche]); // Save collision point
         this.lines[i].setCellColided(indexCollision[indexPlusProche]);
+        this.lines[i].angle = false;
+        
+        if (i > 0) {
+          if (lines[i-1].cellCollided%map.largeur != lines[i].cellCollided%map.largeur && lines[i-1].cellCollided%map.longeur != lines[i].cellCollided%map.longeur) {
+            lines[i].angle = true;
+            lines[i-1].angle = true;
+          }
+        }
         
       } else { // If we didn't found a collision (wich is not supposed to append but append sometimes) we simply copy all the value from a neighbour line
       

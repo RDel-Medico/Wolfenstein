@@ -24,7 +24,7 @@ Vision view;
 boolean [] obstacles;
 
 //The number of line in the view
-int nbLineOfView = 700; // This can be 700, 350, 140, 100, 70, 50, 28, 20, 14, 10, 4, 2
+int nbLineOfView = 350; // This can be 700, 350, 140, 100, 70, 50, 28, 20, 14, 10, 4, 2
 
 //Used for debug (calcul time of function)
 int start, end;
@@ -41,9 +41,6 @@ boolean []keyPresseds = new boolean[3]; // [0] = true if Z is pressed, [1] = tru
 
 int offset = 0;
 boolean offsetLeft = false;
-
-boolean shooting = false;
-int frameOfShoot = 0;
 
 void setup() {
   size(700, 700);
@@ -162,18 +159,6 @@ void draw() {
     image(img, width-img.width+offset, height-img.height+30+offset); // Image of the gun
   }
   
-  if (shooting) { // Manage the shoot
-    frameOfShoot++;
-    noStroke();
-    fill(0);
-    circle(width-img.width+offset - frameOfShoot * 10, height-img.height+30+offset - frameOfShoot * 10, 10);
-      
-    if (frameOfShoot == 30) {
-      shooting = false;
-      frameOfShoot = 0;
-    }
-  }
-  
   fill(255, 255, 255);
   text("Press P for 2d rendering", 10, 20);
   text("Press O for 3d rendering", 10, 40);
@@ -184,12 +169,6 @@ void draw() {
   text("Press Z to walk forward", 10, 140);
   
   println("------------------------------------------------");
-}
-
-void mouseClicked() {
-  if (!shooting) {
-    shooting = true;
-  }
 }
 
 void displayBackground() {

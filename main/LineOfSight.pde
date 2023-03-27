@@ -159,6 +159,7 @@ class LineOfSight extends Line {
   Point collision; // closest Point of collision
   Point[] collisions; // All the point of collision (usefull for debug)
   Point pointOfView; //Point to get the direction of the view (The line of sight is a prolongation of the segment (playerX, playerY) to (pointOfView.x, pointOfView.y))
+  boolean angle;
 
 
   LineOfSight (Point start, Point end) {
@@ -166,6 +167,7 @@ class LineOfSight extends Line {
     distanceToObstacle = integerLimit;
     collision = new Point();
     collisions = new Point[0];
+    angle = false;
   }
 
   void SetCollision(Point col) {
@@ -250,8 +252,14 @@ class LineOfSight extends Line {
     } else {
       stroke(map.grid[this.cellCollided].color3d);
     }
-
     strokeWeight(width / nbLineOfView);
+    
+    if (this.angle) {
+      stroke(0);
+      strokeWeight(10);
+    }
+
+    
     line(x, topAndBot, x, height - topAndBot); //Line that represent the wall
 
     //The two point at the top and bottom of the wall to create a proper delimitation between wall / ceiling
